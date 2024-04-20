@@ -4,6 +4,8 @@
 
 #include "Bird.h"
 
+#include "block_manager.h"
+
 using namespace std::chrono_literals;
 
 int main()
@@ -11,6 +13,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 
     Bird b{};
+
+    block_manager bm{};
 
     auto last = std::chrono::system_clock::now();
 
@@ -36,8 +40,11 @@ int main()
             last = std::chrono::system_clock::now();
         }
 
+        bm.update();
+
         window.clear();
         b.display(window);
+        bm.display(window);
         window.display();
     }
 
