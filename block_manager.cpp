@@ -8,25 +8,63 @@ using namespace std::chrono_literals;
 
 auto block_manager::display(sf::RenderWindow& w) -> void
 {
-	for (auto& x : blocks)
+	if (!dead)
 	{
-		x.display(w);
+		for (auto& x : blocks)
+		{
+			x.display(w);
+		}
 	}
 }
 
 auto block_manager::update() -> void
 {
-	if ((std::chrono::system_clock::now() - last) <= 0.1s)
+	if ((std::chrono::system_clock::now() - last) <= 1s)
 	{
 		for (auto& x : blocks)
 		{
-			x.moveForwards();
-
 			if (x.s.getPosition().x < 0)
 			{
 				x.die();
 				blocks.push_back(block{});
 			}
+
+			x.moveForwards();
+		}
+		last = std::chrono::system_clock::now();
+	}
+}
+
+auto block_manager::checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rectangle) -> bool
+{
+	// Get the center of the circle
+	sf::Vector2f circleCenter = circle.getPosition() + sf::Vector2f(circle.getRadius(), circle.getRadius());
+
+	// Get the center of the rectangle
+	sf::Vector2f rectangleCenter = rectangle.getPosition() + 0.5f * rectangle.getSize();
+
+	// Calculate the distance between the centers of the circle and the rectangle
+	float dx = std::abs(circleCenter.x - rectangleCenter.x);
+	float dy = std::abs(circleCenter.y - rectangleCenter.y);
+
+	// Calculate the maximum distance between the centers for a possible collision
+	float maxDistX = circle.getRadius() + 0.5f * rectangle.getSize().x;
+	float maxDistY = circle.getRadius() + 0.5f * rectangle.getSize().y;
+
+	// If the distance between the centers is less than or equal to the maximum distance for both axes,
+	// then they might intersect
+	return (dx <= maxDistX) && (dy <= maxDistY);
+}
+
+auto block_manager::hasHit(sf::CircleShape x) -> bool
+{
+	for (auto& y : blocks)
+	{
+		if (checkCollision(x, y.s))
+		{
+			return true;
 		}
 	}
+
+	return false;
 }

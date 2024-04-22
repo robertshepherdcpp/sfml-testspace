@@ -40,6 +40,11 @@ int main()
             last = std::chrono::system_clock::now();
         }
 
+        if (bm.hasHit(b.bird))
+        {
+            bm.dead = true;
+        }
+
         bm.update();
 
         window.clear();

@@ -16,4 +16,8 @@ struct block_manager
 
 	auto display(sf::RenderWindow& w) -> void;
 	auto update() -> void;
+	auto hasHit(sf::CircleShape x) -> bool;
+	auto checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rectangle) -> bool;
+
+	bool dead = false;
 };
