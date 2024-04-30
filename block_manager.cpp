@@ -1,6 +1,7 @@
 #include<SFML/Graphics.hpp>
 
 #include<chrono>
+#include<iostream>
 
 #include "block_manager.h"
 
@@ -19,14 +20,25 @@ auto block_manager::display(sf::RenderWindow& w) -> void
 
 auto block_manager::update() -> void
 {
-	if ((std::chrono::system_clock::now() - last) <= 1s)
+	if (blocks.size() == 1 && (std::chrono::system_clock::now() - last) >= 1s)
+	{
+		blocks.push_back(block{});
+	}
+
+	if ((std::chrono::system_clock::now() - last) >= 0.002s)
 	{
 		for (auto& x : blocks)
 		{
-			if (x.s.getPosition().x < 0)
+			if (x.s.getPosition().x < 0 && !x.is_dead)
 			{
 				x.die();
+				if (!dead)
+				{
+					playerScore += 1;
+				}
 				blocks.push_back(block{});
+
+				std::cout << "Player score: " << playerScore << "\n";
 			}
 
 			x.moveForwards();

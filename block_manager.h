@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 
 struct block_manager
 {
-	std::vector<block> blocks{ block{} };
+	std::vector<block> blocks{ block{}};
 	std::chrono::system_clock::time_point last = std::chrono::system_clock::now();
 
 	auto display(sf::RenderWindow& w) -> void;
@@ -20,4 +20,5 @@ struct block_manager
 	auto checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rectangle) -> bool;
 
 	bool dead = false;
+	int playerScore = 0;
 };
